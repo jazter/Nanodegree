@@ -49,6 +49,14 @@ public class TracksActivity extends ActionBarActivity {
         listView.setAdapter(trackListAdapter);
 
         if (b != null){
+            final String artistName = b.getString("name");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getSupportActionBar().setSubtitle(artistName);
+                }
+            });
+            
             String artistId = b.getString("artist");
             showArtist(artistId);
         }
@@ -118,13 +126,19 @@ public class TracksActivity extends ActionBarActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                String msg = error.getResponse().getReason();
-                Context context = getApplicationContext();
-                int duration = Toast.LENGTH_SHORT;
+            public void failure(final RetrofitError error) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String msg = error.getResponse().getReason();
+                        Context context = getApplicationContext();
+                        int duration = Toast.LENGTH_SHORT;
 
-                Toast toast = Toast.makeText(context, msg, duration);
-                toast.show();
+                        Toast toast = Toast.makeText(context, msg, duration);
+                        toast.show();
+                    }
+                });
+
             }
         });
     }

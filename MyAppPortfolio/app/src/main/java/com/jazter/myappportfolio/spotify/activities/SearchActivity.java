@@ -52,6 +52,7 @@ public class SearchActivity extends ActionBarActivity {
                     Intent intent = new Intent(SearchActivity.this, TracksActivity.class);
                     Bundle b = new Bundle();
                     b.putString("artist", artistItem.getArtistId());
+                    b.putString("name", artistItem.getArtistName());
                     intent.putExtras(b);
                     startActivity(intent);
                 }
