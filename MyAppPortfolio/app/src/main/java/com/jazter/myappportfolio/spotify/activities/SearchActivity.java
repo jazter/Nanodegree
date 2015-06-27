@@ -1,5 +1,6 @@
 package com.jazter.myappportfolio.spotify.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jazter.myappportfolio.R;
 import com.jazter.myappportfolio.spotify.adapters.ArtistListAdapter;
@@ -72,22 +74,36 @@ public class SearchActivity extends ActionBarActivity {
                 spotify.searchArtists(charSequence.toString(), new Callback<ArtistsPager>() {
                     @Override
                     public void success(ArtistsPager artistsPager, Response response) {
-                        for (int i = 0; i < artistsPager.artists.items.size(); i++){
-                            Artist artist = artistsPager.artists.items.get(i);
+                        if (artistsPager.artists.items.size() > 0) {
+                            for (int i = 0; i < artistsPager.artists.items.size(); i++) {
+                                Artist artist = artistsPager.artists.items.get(i);
 
-                            String url = "http://animalosis.com/wp-content/uploads/2008/06/gato.jpg";
-                            if (artist.images.size() > 0){
-                                url = artist.images.get(0).url;
+                                String url = "http://animalosis.com/wp-content/uploads/2008/06/gato.jpg";
+                                if (artist.images.size() > 0) {
+                                    url = artist.images.get(0).url;
+                                }
+                                ArtistItem item = new ArtistItem(artist.id, artist.name, url);
+                                artistItems.add(item);
                             }
-                            ArtistItem item = new ArtistItem(artist.id, artist.name, url);
-                            artistItems.add(item);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    artistListAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        }else{
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    CharSequence msg = "No artists found";
+                                    Context context = getApplicationContext();
+                                    int duration = Toast.LENGTH_SHORT;
+
+                                    Toast toast = Toast.makeText(context, msg, duration);
+                                    toast.show();
+                                }
+                            });
                         }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                artistListAdapter.notifyDataSetChanged();
-                            }
-                        });
                     }
 
                     @Override
