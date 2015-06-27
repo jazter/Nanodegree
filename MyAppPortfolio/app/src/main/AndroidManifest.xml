@@ -26,6 +26,10 @@
             android:name=".spotify.activities.TracksActivity"
             android:label="@string/title_activity_spotify_tracks" >
         </activity>
+        <activity
+            android:name=".spotify.activities.PlayActivity"
+            android:label="@string/title_activity_play" >
+        </activity>
     </application>
 
 </manifest>
