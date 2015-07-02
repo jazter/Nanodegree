@@ -55,4 +55,5 @@ public class MainActivity extends ActionBarActivity {
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
+
 }

@@ -1,9 +1,13 @@
 package com.jazter.myappportfolio.spotify.utils;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by Jazter on 18/06/2015.
  */
-public class TrackItem {
+public class TrackItem implements Serializable {
     private String id;
     private String trackName;
     private String albumName;

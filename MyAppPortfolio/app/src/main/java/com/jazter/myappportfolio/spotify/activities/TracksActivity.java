@@ -1,6 +1,7 @@
 package com.jazter.myappportfolio.spotify.activities;
 
 import android.content.Context;
+import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -34,6 +35,8 @@ public class TracksActivity extends ActionBarActivity {
     SpotifyApi api = new SpotifyApi();
     ArrayList<TrackItem> trackItems = new ArrayList<TrackItem>();
     TrackListAdapter trackListAdapter;
+    String artistName;
+    String artistId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,20 +47,31 @@ public class TracksActivity extends ActionBarActivity {
 
         final ListView listView = (ListView) findViewById(R.id.tracks_list_view);
 
-        trackListAdapter = new TrackListAdapter(this, R.layout.track_layout_item, trackItems);
+        if (savedInstanceState != null) {
+            artistName = savedInstanceState.getString("artist");
+            trackItems = (ArrayList<TrackItem>) savedInstanceState.getSerializable("tracks");
 
+        }else {
+            if (b != null) {
+                artistName = b.getString("name");
+
+                artistId = b.getString("artist");
+            }
+        }
+
+        trackListAdapter = new TrackListAdapter(this, R.layout.track_layout_item, trackItems);
         listView.setAdapter(trackListAdapter);
 
-        if (b != null){
-            final String artistName = b.getString("name");
+
+        if (savedInstanceState ==  null) {
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     getSupportActionBar().setSubtitle(artistName);
                 }
             });
-            
-            String artistId = b.getString("artist");
+
             showArtist(artistId);
         }
     }
@@ -110,7 +124,7 @@ public class TracksActivity extends ActionBarActivity {
                             trackListAdapter.notifyDataSetChanged();
                         }
                     });
-                }else{
+                } else {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -141,5 +155,13 @@ public class TracksActivity extends ActionBarActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable("tracks", trackItems);
+        outState.putString("artist", artistName);
+
+        super.onSaveInstanceState(outState);
     }
 }
